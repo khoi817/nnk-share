@@ -1,133 +1,110 @@
-// Firebase config (thay bằng của bạn)
+// ------------------- Firebase Config -------------------
 const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+
+// Firestore & Auth
 const db = firebase.firestore();
+const auth = firebase.auth();
 
-// Login Google
-document.getElementById("loginBtn")?.addEventListener("click",()=>{
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider);
-});
+// ------------------- DOM Elements -------------------
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const uploadBtn = document.getElementById('uploadBtn');
+const scriptList = document.getElementById('script-list');
+const searchInput = document.getElementById('searchInput');
 
-// Logout
-document.getElementById("logoutBtn")?.addEventListener("click",()=>auth.signOut());
+// ------------------- Auth -------------------
+const provider = new firebase.auth.GoogleAuthProvider();
 
-// Kiểm tra trạng thái đăng nhập
-auth.onAuthStateChanged(user=>{
+loginBtn.onclick = () => {
+  loginBtn.disabled = true;
+  loginBtn.innerText = 'Đang đăng nhập...';
+  auth.signInWithPopup(provider)
+    .then(() => {
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+      uploadBtn.style.display = 'inline-block';
+    })
+    .catch(err => {
+      alert('Error login: ' + err.message);
+      loginBtn.disabled = false;
+      loginBtn.innerText = 'Login Google';
+    });
+};
+
+logoutBtn.onclick = () => {
+  auth.signOut().then(() => {
+    loginBtn.style.display = 'inline-block';
+    logoutBtn.style.display = 'none';
+    uploadBtn.style.display = 'none';
+  });
+};
+
+auth.onAuthStateChanged(user => {
   if(user){
-    document.getElementById("uploadBtn")?.style.display="inline-block";
-    document.getElementById("logoutBtn")?.style.display="inline-block";
-    document.getElementById("loginBtn")?.style.display="none";
-    document.getElementById("copyBtn")?.style.display="inline-block";
-    document.getElementById("likeBtn")?.style.display="inline-block";
-    document.getElementById("starContainer")?.style.display="block";
+    loginBtn.style.display = 'none';
+    logoutBtn.style.display = 'inline-block';
+    uploadBtn.style.display = 'inline-block';
   }else{
-    document.getElementById("uploadBtn")?.style.display="none";
-    document.getElementById("logoutBtn")?.style.display="none";
-    document.getElementById("loginBtn")?.style.display="inline-block";
-    document.getElementById("copyBtn")?.style.display="none";
-    document.getElementById("likeBtn")?.style.display="none";
-    document.getElementById("starContainer")?.style.display="none";
+    loginBtn.style.display = 'inline-block';
+    logoutBtn.style.display = 'none';
+    uploadBtn.style.display = 'none';
   }
 });
 
-// Upload script
-const form = document.getElementById("uploadForm");
-form?.addEventListener("submit", async e=>{
-  e.preventDefault();
-  const title = document.getElementById("title").value;
-  const code = document.getElementById("code").value;
-  const desc = document.getElementById("desc").value;
-  const user = auth.currentUser;
-  if(!user){alert("Bạn phải đăng nhập!"); return;}
-  await db.collection("scripts").add({
-    name:title,
-    code:code,
-    description:desc,
-    author:user.uid,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-    likes:0,
-    ratings:[]
-  });
-  alert("Upload thành công!");
-  form.reset();
-});
-
-// Load danh sách script (index.html)
-const listDiv = document.getElementById("script-list");
-const searchInput = document.getElementById("searchInput");
-async function loadScripts(){
-  if(!listDiv) return;
-  const snapshot = await db.collection("scripts").orderBy("createdAt","desc").get();
-  listDiv.innerHTML="";
-  snapshot.forEach(doc=>{
-    const data = doc.data();
-    const card = document.createElement("div");
-    card.className="card";
-    card.innerHTML = `<h3>${data.name}</h3><p>${data.description}</p>
-      <button onclick="location.href='script-detail.html?id=${doc.id}'">Xem chi tiết</button>`;
-    listDiv.appendChild(card);
-  });
-}
-loadScripts();
-
-// Search filter
-searchInput?.addEventListener("input",()=>{
-  const val = searchInput.value.toLowerCase();
-  document.querySelectorAll(".card").forEach(card=>{
-    const text = card.innerText.toLowerCase();
-    card.style.display = text.includes(val)?"block":"none";
-  });
-});
-
-// Chi tiết script (script-detail.html)
-const params = new URLSearchParams(location.search);
-const scriptId = params.get("id");
-if(scriptId){
-  const docRef = db.collection("scripts").doc(scriptId);
-  docRef.get().then(docSnap=>{
-    if(docSnap.exists){
-      const data = docSnap.data();
-      document.getElementById("title").innerText = data.name;
-      document.getElementById("desc").innerText = data.description;
-      document.getElementById("code").innerText = data.code;
-      document.getElementById("likeCount").innerText = data.likes || 0;
-    }
-  });
-
-  // Copy script
-  document.getElementById("copyBtn")?.addEventListener("click",()=>{
-    navigator.clipboard.writeText(document.getElementById("code").innerText);
-    alert("Đã copy script!");
-  });
-
-  // Like
-  document.getElementById("likeBtn")?.addEventListener("click",()=>{
-    const user = auth.currentUser;
-    if(!user){alert("Bạn phải đăng nhập!"); return;}
-    docRef.update({likes: firebase.firestore.FieldValue.increment(1)});
-    const countEl = document.getElementById("likeCount");
-    countEl.innerText = parseInt(countEl.innerText)+1;
-  });
-
-  // Đánh giá sao
-  document.querySelectorAll(".star").forEach(star=>{
-    star.addEventListener("click",()=>{
-      const user = auth.currentUser;
-      if(!user){alert("Bạn phải đăng nhập!"); return;}
-      const rate = parseInt(star.dataset.rate);
-      docRef.update({
-        ratings: firebase.firestore.FieldValue.arrayUnion(rate)
+// ------------------- Load Scripts -------------------
+function loadScripts(filter=''){
+  scriptList.innerHTML = 'Loading...';
+  db.collection("scripts").orderBy("createdAt","desc").get()
+    .then(snapshot=>{
+      scriptList.innerHTML = '';
+      snapshot.forEach(doc=>{
+        const data = doc.data();
+        if(data.name.toLowerCase().includes(filter.toLowerCase()) || data.description.toLowerCase().includes(filter.toLowerCase())){
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h3>${data.name}</h3>
+            <p>${data.description.substring(0,100)}...</p>
+            <button onclick="viewScript('${doc.id}')">Xem chi tiết</button>
+          `;
+          scriptList.appendChild(card);
+        }
       });
-      alert("Cảm ơn đã đánh giá " + rate + " sao!");
-    });
-  });
+      if(scriptList.innerHTML==='') scriptList.innerHTML='Không có script nào';
+    })
+    .catch(err=>console.log(err));
+}
+
+searchInput.addEventListener('input', e=>{
+  loadScripts(e.target.value);
+});
+
+// ------------------- View Script Detail -------------------
+function viewScript(id){
+  localStorage.setItem('viewScriptId', id);
+  location.href='script-detail.html';
+}
+
+// ------------------- Upload Script -------------------
+function uploadScript(name, code, description){
+  const user = auth.currentUser;
+  if(!user){alert('Bạn phải login trước'); return;}
+  db.collection('scripts').add({
+    name,
+    code,
+    description,
+    author: user.displayName,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(()=>{
+    alert('Upload thành công');
+    location.href='index.html';
+  }).catch(err=>alert('Error: '+err.message));
 }
