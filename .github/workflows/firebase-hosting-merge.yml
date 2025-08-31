@@ -3,28 +3,23 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main  # nếu branch chính của bạn là master thì đổi thành master
+      - main  # đổi thành master nếu repo bạn dùng master
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Install Firebase CLI
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # Deploy to Firebase Hosting
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
