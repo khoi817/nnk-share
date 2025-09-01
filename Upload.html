@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Upload Script</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+</head>
+<body>
+<header>
+  <h1>Upload Script</h1>
+  <nav>
+    <a href="index.html">Trang chủ</a>
+    <button id="logoutBtn">Đăng xuất</button>
+  </nav>
+</header>
+
+<main style="padding:20px;">
+  <form id="uploadForm">
+    <input type="text" id="title" placeholder="Tên script" required><br><br>
+    <textarea id="description" placeholder="Mô tả script" required></textarea><br><br>
+    <textarea id="code" placeholder="Dán code script tại đây" required></textarea><br><br>
+    <button type="submit">Tải lên</button>
+  </form>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
