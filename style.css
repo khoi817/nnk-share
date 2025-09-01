@@ -117,3 +117,54 @@ nav button:hover, nav a:hover {
 #copyBtn:hover, #rateBtn:hover {
   background-color: #45a049;
 }
+/* Bình luận */
+#comments-section {
+  margin-top: 20px;
+}
+
+#comments-list div {
+  padding: 10px;
+  margin-bottom: 6px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 6px;
+}
+
+#comment-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+#comment-btn {
+  margin-top: 5px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  background-color: #2196F3;
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#comment-btn:hover {
+  background-color: #1976D2;
+}
+
+/* Các nút khác */
+#copyBtn {
+  padding: 10px 15px;
+  border-radius: 6px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+#copyBtn:hover {
+  background-color: #45a049;
+}
