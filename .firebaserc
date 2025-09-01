@@ -1,1 +1,5 @@
-
+{
+  "projects": {
+    "default": "nnk-share-script"
+  }
+}
