@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Upload Script</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
@@ -17,13 +18,14 @@
   </nav>
 </header>
 
-<main style="padding:20px;">
+<main>
   <form id="uploadForm">
-    <input type="text" id="title" placeholder="Tên script" required><br><br>
-    <textarea id="description" placeholder="Mô tả script" required></textarea><br><br>
-    <textarea id="code" placeholder="Dán code script tại đây" required></textarea><br><br>
-    <button type="submit">Tải lên</button>
+    <input type="text" id="scriptTitle" placeholder="Tên script" required>
+    <textarea id="scriptContent" placeholder="Dán script tại đây..." required></textarea>
+    <textarea id="scriptDesc" placeholder="Mô tả script..." required></textarea>
+    <button type="submit">Upload</button>
   </form>
+  <p id="statusMsg"></p>
 </main>
 
 <script src="script.js"></script>
