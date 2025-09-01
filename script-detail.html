@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Chi tiết Script</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+</head>
+<body>
+<header>
+  <h1>Chi tiết Script</h1>
+  <nav>
+    <a href="index.html">Trang chủ</a>
+    <button id="logoutBtn" style="display:none;">Đăng xuất</button>
+  </nav>
+</header>
+
+<main style="padding:20px;">
+  <h2 id="script-title"></h2>
+  <p id="script-description"></p>
+  <pre id="script-code" style="background:#222; padding:15px; border-radius:8px; overflow:auto;"></pre>
+  <button id="copyBtn">Copy script</button>
+
+  <div style="margin-top:15px;">
+    <span>Đánh giá: </span>
+    <span id="rating">0</span> / 5
+    <button id="rateBtn">Đánh giá 1 sao</button>
+  </div>
+</main>
+
+<script src="script-detail.js"></script>
+</body>
+</html>
