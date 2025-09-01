@@ -1,129 +1,90 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC5TtQYbKXDfQNXFJdbKvZ7sec12RKKTpE",
   authDomain: "nnk-share-script.firebaseapp.com",
   projectId: "nnk-share-script",
-  storageBucket: "nnk-share-script.firebasestorage.app",
+  storageBucket: "nnk-share-script.appspot.com",
   messagingSenderId: "475699956536",
-  appId: "1:475699956536:web:d4a85dcc451e81785bcfcd",
-  measurementId: "G-0VZSK2HCGM"
+  appId: "1:475699956536:web:d4a85dcc451e81785bcfcd"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// ===== DOM Elements =====
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const uploadBtn = document.getElementById("uploadBtn");
-const scriptList = document.getElementById("script-list");
-const searchInput = document.getElementById("searchInput");
-const uploadForm = document.getElementById("uploadForm");
-const titleEl = document.getElementById("script-title");
-const descEl = document.getElementById("script-description");
-const codeEl = document.getElementById("script-code");
-const copyBtn = document.getElementById("copyBtn");
-const ratingEl = document.getElementById("rating");
-const rateBtn = document.getElementById("rateBtn");
+// Lấy scriptId từ URL
+const params = new URLSearchParams(window.location.search);
+const scriptId = params.get("id");
 
-// ===== Auth =====
-if (loginBtn) loginBtn.addEventListener("click", () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider);
+// Hiển thị chi tiết script
+const scriptTitle = document.getElementById("script-title");
+const scriptDesc = document.getElementById("script-description");
+const scriptCode = document.getElementById("script-code");
+
+if (scriptId) {
+  db.collection("scripts").doc(scriptId).get().then(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      scriptTitle.textContent = data.title;
+      scriptDesc.textContent = data.description;
+      scriptCode.textContent = data.code;
+    }
+  });
+}
+
+// Copy code
+const copyBtn = document.getElementById("copyBtn");
+if (copyBtn) copyBtn.addEventListener("click", () => {
+  navigator.clipboard.writeText(scriptCode.textContent).then(() => {
+    alert("Đã copy code!");
+  });
 });
 
-if (logoutBtn) logoutBtn.addEventListener("click", () => auth.signOut());
+// ===== Bình luận =====
+const commentsList = document.getElementById("comments-list");
+const commentInput = document.getElementById("comment-input");
+const commentBtn = document.getElementById("comment-btn");
+const commentFormContainer = document.getElementById("comment-form-container");
+const loginPrompt = document.getElementById("login-prompt");
 
 auth.onAuthStateChanged(user => {
   if (user) {
-    if (loginBtn) loginBtn.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "inline-block";
-    if (uploadBtn) uploadBtn.style.display = "inline-block";
+    // Hiện form bình luận
+    if(commentFormContainer) commentFormContainer.style.display = "block";
+    if(loginPrompt) loginPrompt.style.display = "none";
   } else {
-    if (loginBtn) loginBtn.style.display = "inline-block";
-    if (logoutBtn) logoutBtn.style.display = "none";
-    if (uploadBtn) uploadBtn.style.display = "none";
+    // Ẩn form, hiện thông báo đăng nhập
+    if(commentFormContainer) commentFormContainer.style.display = "none";
+    if(loginPrompt) loginPrompt.style.display = "block";
   }
 });
 
-// ===== Upload Script =====
-if (uploadForm) {
-  uploadForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    const title = document.getElementById("title").value;
-    const description = document.getElementById("description").value;
-    const code = document.getElementById("code").value;
+if (scriptId && commentsList) {
+  const commentsRef = db.collection("scripts").doc(scriptId).collection("comments").orderBy("createdAt", "asc");
 
-    await db.collection("scripts").add({
-      title,
-      description,
-      code,
-      rating: 0,
+  // Hiển thị comment real-time
+  commentsRef.onSnapshot(snapshot => {
+    commentsList.innerHTML = "";
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement("div");
+      div.innerHTML = `<strong>${data.user}</strong>: ${data.text}`;
+      commentsList.appendChild(div);
+    });
+  });
+
+  // Gửi comment
+  if (commentBtn) commentBtn.addEventListener("click", async () => {
+    if (!auth.currentUser) return alert("Bạn cần đăng nhập để bình luận!");
+    const text = commentInput.value.trim();
+    if (!text) return alert("Nhập bình luận!");
+    
+    await db.collection("scripts").doc(scriptId).collection("comments").add({
+      text,
+      user: auth.currentUser.displayName,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    alert("Upload thành công!");
-    uploadForm.reset();
-  });
-}
-
-// ===== Load Scripts (Index) =====
-if (scriptList) {
-  db.collection("scripts").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-    scriptList.innerHTML = "";
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `<h3>${data.title}</h3><p>${data.description}</p>`;
-      card.addEventListener("click", () => {
-        window.location.href = `script-detail.html?id=${doc.id}`;
-      });
-      scriptList.appendChild(card);
-    });
-  });
-}
-
-// ===== Search =====
-if (searchInput) {
-  searchInput.addEventListener("input", e => {
-    const filter = e.target.value.toLowerCase();
-    document.querySelectorAll(".card").forEach(card => {
-      const text = card.textContent.toLowerCase();
-      card.style.display = text.includes(filter) ? "block" : "none";
-    });
-  });
-}
-
-// ===== Script Detail Page =====
-const urlParams = new URLSearchParams(window.location.search);
-const scriptId = urlParams.get("id");
-
-if (scriptId && titleEl && descEl && codeEl) {
-  db.collection("scripts").doc(scriptId).get().then(doc => {
-    if (!doc.exists) { alert("Script không tồn tại!"); return; }
-    const data = doc.data();
-    titleEl.textContent = data.title;
-    descEl.textContent = data.description;
-    codeEl.textContent = data.code;
-    if (ratingEl) ratingEl.textContent = data.rating || 0;
-  });
-
-  if (copyBtn) copyBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(codeEl.textContent);
-    alert("Đã copy script!");
-  });
-
-  if (rateBtn) rateBtn.addEventListener("click", async () => {
-    const docRef = db.collection("scripts").doc(scriptId);
-    await db.runTransaction(async t => {
-      const docSnap = await t.get(docRef);
-      const currentRating = docSnap.data().rating || 0;
-      t.update(docRef, { rating: currentRating + 1 });
-    });
-    const newRating = parseInt(ratingEl.textContent || "0") + 1;
-    ratingEl.textContent = newRating;
-    alert("Đã đánh giá!");
+    commentInput.value = "";
   });
 }
