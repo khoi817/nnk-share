@@ -1,170 +1,52 @@
-/* Reset cơ bản */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  body,html {
+  margin:0; padding:0;
+  font-family:sans-serif;
+  background:#121212;
+  color:#fff;
 }
-
-body {
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;   /* chữ cơ bản */
-  line-height: 1.6;
-  background-color: #1e1e2f;
-  color: #fff;
-  padding: 20px;
-}
-
-/* Header */
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 20px;
+  background:rgba(0,0,0,0.7);
+  position:sticky; top:0;
+  backdrop-filter:blur(6px);
 }
-
-header h1 {
-  font-size: 2rem;   /* chữ to */
-  color: #ffcc00;
+h1 {
+  margin:0; font-size:2rem;
+  background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,violet);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  animation:rainbow 6s linear infinite;
 }
-
-nav button, nav a {
-  font-size: 1.2rem;           /* chữ nút to */
-  padding: 12px 18px;          /* nút to, dễ bấm */
-  margin-left: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #ff9800;
-  color: #fff;
-  transition: background 0.2s;
+@keyframes rainbow {
+  0% {background-position:0%}
+  100% {background-position:400%}
 }
-
-nav button:hover, nav a:hover {
-  background-color: #e68a00;
+nav a, nav button {
+  margin-left:10px; padding:6px 12px;
+  border:none; border-radius:8px;
+  cursor:pointer; font-weight:600;
+  background:#fff; color:#000; text-decoration:none;
 }
-
-/* Input tìm kiếm */
-#searchInput {
-  font-size: 1.1rem;   /* chữ input lớn */
-  padding: 12px;
-  width: 100%;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  border: none;
-}
-
-/* Grid script */
+#uploadBtn {background:#4CAF50; color:#fff}
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  padding:20px;
 }
-
 .card {
-  background: rgba(50,50,70,0.9);
-  padding: 20px;      /* padding lớn hơn */
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.2s;
+  background:rgba(0,0,0,0.7);
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform 0.3s;
+  padding:15px;
 }
-
-.card:hover {
-  transform: scale(1.05);
+.card:hover {transform:scale(1.03)}
+.card h2 {margin:0 0 10px 0;font-size:1.2rem}
+.card p {margin:0;color:#ccc;font-size:0.95rem}
+textarea,input[type=text],button {
+  width:100%; margin-bottom:10px; padding:8px; border-radius:8px; border:none;
 }
-
-.card h3 {
-  font-size: 1.2rem;   /* chữ tiêu đề card to */
-  margin-bottom: 8px;
-}
-
-.card p {
-  font-size: 1rem;     /* chữ mô tả card */
-}
-
-/* Script Detail */
-#script-title {
-  font-size: 2rem;
-  margin-bottom: 12px;
-}
-
-#script-description {
-  font-size: 1.1rem;
-  margin-bottom: 12px;
-}
-
-#script-code {
-  font-size: 1rem;
-  background: rgba(0,0,0,0.7);
-  padding: 15px;
-  border-radius: 10px;
-  overflow-x: auto;
-  margin-bottom: 15px;
-}
-
-/* Button copy, rate */
-#copyBtn, #rateBtn {
-  font-size: 1.1rem;
-  padding: 12px 18px;   /* to, dễ bấm */
-  margin-right: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  transition: background 0.2s;
-}
-
-#copyBtn:hover, #rateBtn:hover {
-  background-color: #45a049;
-}
-/* Bình luận */
-#comments-section {
-  margin-top: 20px;
-}
-
-#comments-list div {
-  padding: 10px;
-  margin-bottom: 6px;
-  background: rgba(0,0,0,0.4);
-  border-radius: 6px;
-}
-
-#comment-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-}
-
-#comment-btn {
-  margin-top: 5px;
-  padding: 10px 15px;
-  border-radius: 6px;
-  background-color: #2196F3;
-  color: #fff;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-#comment-btn:hover {
-  background-color: #1976D2;
-}
-
-/* Các nút khác */
-#copyBtn {
-  padding: 10px 15px;
-  border-radius: 6px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-bottom: 15px;
-}
-
-#copyBtn:hover {
-  background-color: #45a049;
-}
+button {background:#4CAF50; color:#fff; cursor:pointer; font-weight:600}
+button:hover {opacity:0.9}
