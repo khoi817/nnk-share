@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": "Web",
-    "ignore": ["firebase.json", "**/Web*", "**/node_modules/**"],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [ { "source": "**", "destination": "/index.html" } ]
   }
 }
