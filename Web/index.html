@@ -2,7 +2,6 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NNK Share Script</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
@@ -10,11 +9,12 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
 <body>
+
 <header>
   <h1>NNK Share Script</h1>
   <nav>
     <a href="upload.html" id="uploadBtn" style="display:none;">Upload</a>
-    <button id="loginBtn">Đăng nhập Google</button>
+    <button id="loginBtn">Đăng nhập</button>
     <button id="logoutBtn" style="display:none;">Đăng xuất</button>
   </nav>
 </header>
@@ -23,6 +23,15 @@
   <input type="text" id="searchInput" placeholder="Tìm kiếm script...">
   <div class="grid" id="script-list"></div>
 </main>
+
+<!-- Popup nhập tên hiển thị -->
+<div id="namePopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3>Nhập tên hiển thị của bạn</h3>
+    <input type="text" id="displayNameInput" placeholder="Tên hiển thị">
+    <button id="saveNameBtn">Lưu tên</button>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
