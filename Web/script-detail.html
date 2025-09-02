@@ -9,35 +9,37 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
 <body>
+
 <header>
   <h1>Chi tiết Script</h1>
   <nav>
     <a href="index.html">Trang chủ</a>
+    <button id="logoutBtn" style="display:none;">Đăng xuất</button>
   </nav>
 </header>
 
 <main>
-  <h2 id="script-title"></h2>
-  <p id="script-description"></p>
-  <pre id="script-code"></pre>
-  
-  <button id="copyBtn">Copy Code</button>
+  <h2 id="scriptTitle"></h2>
+  <pre id="scriptContent"></pre>
 
-  <!-- Bình luận -->
-  <section id="comments-section">
-    <h2>Bình luận</h2>
-    <div id="comments-list"></div>
+  <h3>Bình luận</h3>
+  <div id="commentsList"></div>
 
-    <div id="comment-form-container" style="margin-top:10px; display:none;">
-      <textarea id="comment-input" placeholder="Viết bình luận..." rows="3"></textarea>
-      <button id="comment-btn">Gửi</button>
-    </div>
-
-    <div id="login-prompt" style="margin-top:10px; color:#ffcc00;">
-      Vui lòng <strong>đăng nhập</strong> để bình luận.
-    </div>
-  </section>
+  <!-- Nhập bình luận -->
+  <div id="commentSection" style="display:none;">
+    <input type="text" id="commentInput" placeholder="Viết bình luận...">
+    <button id="sendCommentBtn">Gửi</button>
+  </div>
 </main>
+
+<!-- Popup nhập tên hiển thị -->
+<div id="namePopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3>Nhập tên hiển thị của bạn</h3>
+    <input type="text" id="displayNameInput" placeholder="Tên hiển thị">
+    <button id="saveNameBtn">Lưu tên</button>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
