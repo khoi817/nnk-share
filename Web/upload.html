@@ -2,7 +2,6 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Upload Script</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
@@ -10,23 +9,29 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
 <body>
+
 <header>
   <h1>Upload Script</h1>
   <nav>
     <a href="index.html">Trang chủ</a>
-    <button id="logoutBtn">Đăng xuất</button>
+    <button id="logoutBtn" style="display:none;">Đăng xuất</button>
   </nav>
 </header>
 
 <main>
-  <form id="uploadForm">
-    <input type="text" id="scriptTitle" placeholder="Tên script" required>
-    <textarea id="scriptContent" placeholder="Dán script tại đây..." required></textarea>
-    <textarea id="scriptDesc" placeholder="Mô tả script..." required></textarea>
-    <button type="submit">Upload</button>
-  </form>
-  <p id="statusMsg"></p>
+  <input type="text" id="scriptTitleInput" placeholder="Tên script">
+  <textarea id="scriptContentInput" placeholder="Nội dung script"></textarea>
+  <button id="uploadScriptBtn">Upload</button>
 </main>
+
+<!-- Popup nhập tên hiển thị -->
+<div id="namePopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3>Nhập tên hiển thị của bạn</h3>
+    <input type="text" id="displayNameInput" placeholder="Tên hiển thị">
+    <button id="saveNameBtn">Lưu tên</button>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
